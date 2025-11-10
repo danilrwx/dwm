@@ -10,9 +10,9 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Iosevka NFM:size=14" };
 static const char dmenufont[]       = "Iosevka NFM:size=14";
-static const char col_bg[]          = "#000000";
-static const char col_fg[]          = "#ffffff";
-static const char col_accent[]      = "#00cd00";
+static const char col_bg[]          = "#1e1e2e";
+static const char col_fg[]          = "#cdd6f4";
+static const char col_accent[]      = "#a6e3a1";
 static const char *colors[][3]      = {
 	/*              fg        bg      border    */
 	[SchemeNorm]  = { col_fg, col_bg, col_bg },
