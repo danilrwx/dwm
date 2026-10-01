@@ -10,10 +10,11 @@ static const unsigned int systrayspacing = 4;   /* systray spacing */
 static const unsigned int systrayiconsize = 22; /* systray icon size in px */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;        /* 0 means no systray */
+static const int sidepad            = 24;       /* bar padding left and right, clear of the rounded screen corners */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Iosevka:size=14", "Symbols Nerd Font Mono:size=14", "Apple Color Emoji:size=14" };
-static const char dmenufont[]       = "Iosevka:size=14";
+static const char *fonts[]          = { "Iosevka:size=12", "Symbols Nerd Font Mono:size=10", "Apple Color Emoji:size=12" };
+static const char dmenufont[]       = "Iosevka:size=12";
 /* as the i3 and sway bars (~/dotfiles config/i3/config): black, white text, green focus, gray idle tags */
 static const char col_bg[]          = "#000000";
 static const char col_fg[]          = "#ffffff";
