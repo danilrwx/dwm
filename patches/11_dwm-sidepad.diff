@@ -1,0 +1,92 @@
+--- a/config.def.h
++++ b/config.def.h
+@@ -10,6 +10,7 @@
+ static const unsigned int systrayiconsize = 22; /* systray icon size in px */
+ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
+ static const int showsystray        = 1;        /* 0 means no systray */
++static const int sidepad            = 24;       /* bar padding left and right, clear of the rounded screen corners */
+ static const int showbar            = 1;        /* 0 means no bar */
+ static const int topbar             = 1;        /* 0 means bottom bar */
+ static const char *fonts[]          = { "Iosevka:size=14", "Symbols Nerd Font Mono:size=14", "Apple Color Emoji:size=14" };
+--- a/dwm.c
++++ b/dwm.c
+@@ -497,7 +497,8 @@
+ 		focus(NULL);
+ 	}
+ 	if (ev->window == selmon->barwin) {
+-		i = x = 0;
++		i = 0;
++		x = sidepad;
+ 		do
+ 			x += TEXTW(tags[i]);
+ 		while (ev->x >= x && ++i < LENGTH(tags));
+@@ -506,7 +507,7 @@
+ 			arg.ui = 1 << i;
+ 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
+ 			click = ClkLtSymbol;
+-		else if (ev->x > selmon->ww - (int)TEXTW(stext) - getsystraywidth())
++		else if (ev->x > selmon->ww - (int)TEXTW(stext) - getsystraywidth() - sidepad)
+ 			click = ClkStatusText;
+ 		else
+ 			click = ClkWinTitle;
+@@ -835,8 +836,14 @@
+ 	if (!m->showbar)
+ 		return;
+ 
++	/* stw: what the status keeps clear on the right, the side padding and the systray past it */
++	stw = sidepad;
+ 	if(showsystray && m == systraytomon(m) && !systrayonleft)
+-		stw = getsystraywidth();
++		stw += getsystraywidth();
++
++	/* the background under the side padding, which nothing else draws over */
++	drw_setscheme(drw, scheme[SchemeNorm]);
++	drw_rect(drw, 0, 0, m->ww, bh, 1, 1);
+ 
+ 	/* draw status first so it can be overdrawn by tags later */
+ 	if (m == selmon) { /* status is only drawn on selected monitor */
+@@ -851,7 +858,7 @@
+ 		if (c->isurgent)
+ 			urg |= c->tags;
+ 	}
+-	x = 0;
++	x = sidepad;
+ 	for (i = 0; i < LENGTH(tags); i++) {
+ 		w = TEXTW(tags[i]);
+ 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
+@@ -877,7 +884,7 @@
+ 			drw_rect(drw, x, 0, w, bh, 1, 1);
+ 		}
+ 	}
+-	drw_map(drw, m->barwin, 0, 0, m->ww - stw, bh);
++	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
+ }
+ 
+ void
+@@ -1478,7 +1485,7 @@
+ resizebarwin(Monitor *m) {
+ 	unsigned int w = m->ww;
+ 	if (showsystray && m == systraytomon(m) && !systrayonleft)
+-		w -= getsystraywidth();
++		w -= getsystraywidth() + sidepad;
+ 	XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, w, bh);
+ }
+ 
+@@ -2112,7 +2119,7 @@
+ 			continue;
+ 		w = m->ww;
+ 		if (showsystray && m == systraytomon(m))
+-			w -= getsystraywidth();
++			w -= getsystraywidth() + sidepad;
+ 		m->barwin = XCreateWindow(dpy, root, m->wx, m->by, w, bh, 0, DefaultDepth(dpy, screen),
+ 				CopyFromParent, DefaultVisual(dpy, screen),
+ 				CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
+@@ -2351,7 +2358,7 @@
+ 	XWindowChanges wc;
+ 	Client *i;
+ 	Monitor *m = systraytomon(NULL);
+-	unsigned int x = m->mx + m->mw;
++	unsigned int x = m->mx + m->mw - sidepad;
+ 	unsigned int sw = TEXTW(stext) - lrpad + systrayspacing;
+ 	unsigned int w = 1;
+ 
