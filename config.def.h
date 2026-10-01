@@ -12,13 +12,13 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Iosevka NFM:size=14" };
+static const char *fonts[]          = { "Iosevka NFM:size=14", "Apple Color Emoji:size=14" };
 static const char dmenufont[]       = "Iosevka NFM:size=14";
 /* as the i3 and sway bars (~/dotfiles config/i3/config): black, white text, green focus, gray idle tags */
 static const char col_bg[]          = "#000000";
 static const char col_fg[]          = "#ffffff";
 static const char col_accent[]      = "#00cd00";
-static const char col_gray[]        = "#7f849c";
+static const char col_gray[]        = "#888888";
 static const char *colors[][3]      = {
 	/*              fg        bg      border    */
 	[SchemeNorm]  = { col_gray, col_bg, col_bg },
