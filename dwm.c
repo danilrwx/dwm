@@ -36,6 +36,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
+#include <X11/XKBlib.h>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
@@ -138,6 +139,7 @@ struct Monitor {
 	unsigned int sellt;
 	unsigned int tagset[2];
 	int showbar;
+	int peekbar;          /* the hidden bar shown over the windows while Super is held, as i3's bar mode hide */
 	int topbar;
 	Client *clients;
 	Client *sel;
@@ -236,6 +238,9 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
+static void holdbar(const Arg *arg);
+static void keyrelease(XEvent *e);
+static void peekbar(Monitor *m, int on);
 static void togglefloating(const Arg *arg);
 static void togglefullscr(const Arg *arg);
 static void toggletag(const Arg *arg);
@@ -286,6 +291,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 	[Expose] = expose,
 	[FocusIn] = focusin,
 	[KeyPress] = keypress,
+	[KeyRelease] = keyrelease,
 	[MappingNotify] = mappingnotify,
 	[MapRequest] = maprequest,
 	[MotionNotify] = motionnotify,
@@ -833,7 +839,7 @@ drawbar(Monitor *m)
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
 
-	if (!m->showbar)
+	if (!m->showbar && !m->peekbar)
 		return;
 
 	/* stw: what the status keeps clear on the right, the side padding and the systray past it */
@@ -1873,6 +1879,7 @@ setup(void)
 		|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask;
 	XChangeWindowAttributes(dpy, root, CWEventMask|CWCursor, &wa);
 	XSelectInput(dpy, root, wa.event_mask);
+	XkbSetDetectableAutoRepeat(dpy, True, NULL);
 	grabkeys();
 	focus(NULL);
 }
@@ -1912,9 +1919,15 @@ void
 spawn(const Arg *arg)
 {
 	struct sigaction sa;
+	Monitor *m;
 
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
+	/* a held Super keeps the keyboard grabbed (holdbar), so let it go for dmenu, i3lock and the like to
+	 * take, and with it the bar it was showing */
+	for (m = mons; m; m = m->next)
+		peekbar(m, 0);
+	XUngrabKeyboard(dpy, CurrentTime);
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
@@ -1977,8 +1990,49 @@ tile(Monitor *m)
 }
 
 void
+holdbar(const Arg *arg)
+{
+	peekbar(selmon, 1);
+}
+
+void
+keyrelease(XEvent *e)
+{
+	Monitor *m;
+	KeySym keysym = XKeycodeToKeysym(dpy, (KeyCode)e->xkey.keycode, 0);
+
+	if (keysym == XK_Super_L || keysym == XK_Super_R)
+		for (m = mons; m; m = m->next)
+			peekbar(m, 0);
+}
+
+/* show or hide the hidden bar over the windows, the layout left as it is */
+void
+peekbar(Monitor *m, int on)
+{
+	XWindowChanges wc;
+
+	if (m->showbar || m->peekbar == on)
+		return;
+	m->peekbar = on;
+	m->by = on ? (m->topbar ? m->my : m->my + m->mh - bh) : -bh;
+	resizebarwin(m);
+	if (showsystray && m == systraytomon(m)) {
+		wc.y = m->by;
+		XConfigureWindow(dpy, systray->win, CWY, &wc);
+		if (on)
+			XRaiseWindow(dpy, systray->win);
+	}
+	if (on) {
+		XRaiseWindow(dpy, m->barwin);
+		drawbar(m);
+	}
+}
+
+void
 togglebar(const Arg *arg)
 {
+	selmon->peekbar = 0;
 	selmon->showbar = !selmon->showbar;
 	updatebarpos(selmon);
 	resizebarwin(selmon);
