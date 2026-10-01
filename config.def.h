@@ -13,9 +13,9 @@ static const int showsystray        = 1;        /* 0 means no systray */
 static const int sidepad            = 24;       /* bar padding left and right, clear of the rounded screen corners */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Iosevka:size=12", "Symbols Nerd Font Mono:size=10", "Apple Color Emoji:size=12" };
-static const char dmenufont[]       = "Iosevka:size=12";
-/* as the i3 and sway bars (~/dotfiles config/i3/config): black, white text, green focus, gray idle tags */
+static const char *fonts[]          = { "Iosevka:size=11", "Symbols Nerd Font Mono:size=9", "Apple Color Emoji:size=11" };
+static const char dmenufont[]       = "Iosevka:size=11";
+/* as the i3 bar (~/dotfiles config/i3/config): black, white text, green focus, gray idle tags */
 static const char col_bg[]          = "#000000";
 static const char col_fg[]          = "#ffffff";
 static const char col_accent[]      = "#00cd00";
@@ -100,7 +100,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	/* media, HONOR Fn and menu keys as under sway and i3 (~/dotfiles: bin/wm-fnkeys, wm-ctl, screenshot-select) */
+	/* media, HONOR Fn and menu keys as under i3 (~/dotfiles: bin/wm-fnkeys, wm-ctl, screenshot-select) */
 	{ 0,                            XF86XK_AudioRaiseVolume,   spawn, SHCMD("~/dotfiles/bin/wm-fnkeys vol-up") },
 	{ 0,                            XF86XK_AudioLowerVolume,   spawn, SHCMD("~/dotfiles/bin/wm-fnkeys vol-down") },
 	{ 0,                            XF86XK_AudioMute,          spawn, SHCMD("~/dotfiles/bin/wm-fnkeys vol-mute") },
