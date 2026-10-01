@@ -113,7 +113,7 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_TouchpadOff,        spawn, SHCMD("~/dotfiles/bin/wm-fnkeys touchpad-off") },
 	{ 0,                            XF86XK_TouchpadToggle,     spawn, SHCMD("~/dotfiles/bin/wm-fnkeys touchpad-toggle") },
 	{ 0,                            XF86XK_Launch1,            spawn, SHCMD("~/dotfiles/bin/wm-fnkeys profile") },
-	{ 0,                            XF86XK_CameraAccessToggle, spawn, SHCMD("~/dotfiles/bin/wm-fnkeys camera") },
+	{ 0,                            0x1008124d,                spawn, SHCMD("~/dotfiles/bin/wm-fnkeys camera") }, /* XF86XK_CameraAccessToggle: XF86keysym.h #undefs its _EVDEVK() helper at the end */
 	{ 0,                            XF86XK_AudioPlay,          spawn, SHCMD("playerctl play-pause") },
 	{ 0,                            XF86XK_AudioNext,          spawn, SHCMD("playerctl next") },
 	{ 0,                            XF86XK_AudioPrev,          spawn, SHCMD("playerctl previous") },
