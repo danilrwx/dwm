@@ -12,8 +12,8 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Iosevka NFM:size=14", "Apple Color Emoji:size=14" };
-static const char dmenufont[]       = "Iosevka NFM:size=14";
+static const char *fonts[]          = { "Iosevka:size=14", "Symbols Nerd Font Mono:size=14", "Apple Color Emoji:size=14" };
+static const char dmenufont[]       = "Iosevka:size=14";
 /* as the i3 and sway bars (~/dotfiles config/i3/config): black, white text, green focus, gray idle tags */
 static const char col_bg[]          = "#000000";
 static const char col_fg[]          = "#ffffff";
