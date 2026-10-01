@@ -1,4 +1,8 @@
-/* See LICENSE file for copyright and license details. */ /* appearance */ static const unsigned int borderpx  = 4;        /* border pixel of windows */
+/* See LICENSE file for copyright and license details. */
+#include <X11/XF86keysym.h>
+
+/* appearance */
+static const unsigned int borderpx  = 4;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;    /* 0: systray in the right corner, >0: systray on left of status text */
@@ -93,6 +97,32 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	/* media, HONOR Fn and menu keys as under sway and i3 (~/dotfiles: bin/wm-fnkeys, wm-ctl, screenshot-select) */
+	{ 0,                            XF86XK_AudioRaiseVolume,   spawn, SHCMD("~/dotfiles/bin/wm-fnkeys vol-up") },
+	{ 0,                            XF86XK_AudioLowerVolume,   spawn, SHCMD("~/dotfiles/bin/wm-fnkeys vol-down") },
+	{ 0,                            XF86XK_AudioMute,          spawn, SHCMD("~/dotfiles/bin/wm-fnkeys vol-mute") },
+	{ MODKEY,                       XF86XK_AudioRaiseVolume,   spawn, SHCMD("~/dotfiles/bin/wm-fnkeys mic-up") },
+	{ MODKEY,                       XF86XK_AudioLowerVolume,   spawn, SHCMD("~/dotfiles/bin/wm-fnkeys mic-down") },
+	{ MODKEY|ShiftMask,             XK_m,                      spawn, SHCMD("~/dotfiles/bin/wm-fnkeys mic") },
+	{ 0,                            XF86XK_AudioMicMute,       spawn, SHCMD("~/dotfiles/bin/wm-fnkeys mic") },
+	{ 0,                            XF86XK_MonBrightnessUp,    spawn, SHCMD("~/dotfiles/bin/wm-fnkeys bright-up") },
+	{ 0,                            XF86XK_MonBrightnessDown,  spawn, SHCMD("~/dotfiles/bin/wm-fnkeys bright-down") },
+	{ 0,                            XF86XK_TouchpadOn,         spawn, SHCMD("~/dotfiles/bin/wm-fnkeys touchpad-on") },
+	{ 0,                            XF86XK_TouchpadOff,        spawn, SHCMD("~/dotfiles/bin/wm-fnkeys touchpad-off") },
+	{ 0,                            XF86XK_TouchpadToggle,     spawn, SHCMD("~/dotfiles/bin/wm-fnkeys touchpad-toggle") },
+	{ 0,                            XF86XK_Launch1,            spawn, SHCMD("~/dotfiles/bin/wm-fnkeys profile") },
+	{ 0,                            XF86XK_CameraAccessToggle, spawn, SHCMD("~/dotfiles/bin/wm-fnkeys camera") },
+	{ 0,                            XF86XK_AudioPlay,          spawn, SHCMD("playerctl play-pause") },
+	{ 0,                            XF86XK_AudioNext,          spawn, SHCMD("playerctl next") },
+	{ 0,                            XF86XK_AudioPrev,          spawn, SHCMD("playerctl previous") },
+	{ MODKEY|ShiftMask,             XK_s,                      spawn, SHCMD("~/dotfiles/bin/screenshot-select") },
+	{ 0,                            XK_Print,                  spawn, SHCMD("~/dotfiles/bin/screenshot-select") },
+	{ MODKEY,                       XK_x,                      spawn, SHCMD("~/dotfiles/bin/wm-ctl") },
+	{ MODKEY|ShiftMask,             XK_x,                      spawn, SHCMD("i3lock -c 000000") },
+	{ ControlMask|Mod1Mask,         XK_s,                      spawn, SHCMD("~/dotfiles/bin/sys-notify") },
+	{ ControlMask|Mod1Mask,         XK_c,                      spawn, SHCMD("~/dotfiles/bin/cal-notify") },
+	{ MODKEY,                       XK_n,                      spawn, SHCMD("dunstctl close") },
+	{ MODKEY|ShiftMask,             XK_n,                      spawn, SHCMD("dunstctl close-all") },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
